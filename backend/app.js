@@ -7,7 +7,6 @@ const cors = require('cors');
 const { PORT = 3000 } = process.env;
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const corsHandler = require('./middlewares/cors-handler');
 
 const app = express();
 app.use(cors());
@@ -49,6 +48,5 @@ app.use(errors());
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`Сервер успешно запущен`);
+  console.log('Сервер успешно запущен');
 });
-
