@@ -1,0 +1,14 @@
+.popup__submit-btn_disabled {
+  max-height: 50px;
+  background-color: transparent;
+  border: 1px solid #000;
+  color: #000;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 620px) {
+  .popup__submit-btn_disabled {
+    max-height: 41px;
+  }
+}

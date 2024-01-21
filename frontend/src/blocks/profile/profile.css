@@ -1,0 +1,26 @@
+.profile {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 40px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media screen and (max-width: 730px) {
+  .profile {
+    max-width: calc(100% - 40px);
+    padding: 42px 0 35px;
+    display: grid;
+    grid-template-rows: 1fr;
+    justify-items: center;
+    justify-content: unset;
+    gap: 26px;
+  }
+}
+
+@media screen and (max-width: 920px) {
+  .profile {
+    width: 88%;
+  }
+}
