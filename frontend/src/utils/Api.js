@@ -1,9 +1,6 @@
-import { apiTemplate } from "./utils";
-
 export class Api {
-  constructor({ link, headers }) {
-    this._link = link;
-    this._headers = headers;
+  constructor(apiUrl) {
+    this._link = apiUrl;
   }
 
   _checkServerResponse(res) {
@@ -16,34 +13,45 @@ export class Api {
 
   getUserInfo() {
     return fetch(`${this._link}users/me`, {
-      headers: this._headers,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     })
       .then(this._checkServerResponse)
   }
 
   getInitialCards() {
     return fetch(`${this._link}cards`, {
-      headers: this._headers
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     })
       .then(this._checkServerResponse)
   }
 
   sendUserInfo(userName, userDescription) {
     return fetch(`${this._link}users/me`, {
-      headers: this._headers,
-      method: 'PATCH',
-      body: JSON.stringify({
-        name: userName,
-        about: userDescription
-      })
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ name: userName, about: userDescription }),
     })
       .then(this._checkServerResponse)
   }
 
   createNewCard(name, link) {
     return fetch(`${this._link}cards`, {
-      headers: this._headers,
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({ name, link })
     })
       .then(this._checkServerResponse)
@@ -51,36 +59,39 @@ export class Api {
 
   deleteCard(cardId) {
     return fetch(`${this._link}/cards/${cardId}`, {
-      headers: this._headers,
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     })
       .then(this._checkServerResponse)
   }
 
   changeCardLikeStatus(cardId, isLiked) {
-    if (isLiked) {
-      return fetch(`${this._link}/cards/${cardId}/likes`, {
-        headers: this._headers,
-        method: 'PUT'
-      })
-        .then(this._checkServerResponse)
-    } else {
-      return fetch(`${this._link}/cards/${cardId}/likes`, {
-        headers: this._headers,
-        method: 'DELETE'
-      })
-        .then(this._checkServerResponse)
-    }
+    const methodUsed = isLiked ? 'PUT' : 'DELETE';
+    return fetch(`${this._link}cards/${cardId}/likes`, {
+      method: methodUsed,
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then(this._checkServerResponse)
   }
 
   sendAvatarData(avatarLink) {
     return fetch(`${this._link}/users/me/avatar`, {
-      headers: this._headers,
       method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({ avatar: avatarLink.avatar })
     })
       .then(this._checkServerResponse)
   }
 };
 
-export const apiRequest = new Api(apiTemplate)
+export const apiRequest = new Api('https://api.mestosocial.students.nomoredomainsmonster.ru/');
+

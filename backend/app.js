@@ -1,10 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const cors = require('cors');
 
-const { PORT = 3000, BASE_PATH = 'localhost' } = process.env;
+const { PORT = 3000 } = process.env;
+
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+// const corsHandler = require('./middlewares/cors-handler');
 
 const app = express();
+app.use(cors());
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
@@ -19,6 +25,14 @@ mongoose.connect(mongoDB);
 
 app.use(express.json());
 
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.post('/signin', validateUserLogin, login);
 app.post('/signup', validateUserRegister, createUser);
 
@@ -29,10 +43,12 @@ app.use('*', (req, res, next) => {
   next(new NotFound('Запрашиваемая страница не найдена'));
 });
 
+app.use(errorLogger);
 app.use(errorHandler);
-app.use(errors);
+app.use(errors());
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log(`Адрес сервера — http://${BASE_PATH}:${PORT}`);
+  console.log(`Сервер успешно запущен`);
 });
+

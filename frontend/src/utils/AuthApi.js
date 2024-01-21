@@ -1,6 +1,6 @@
 class AuthApi {
-  constructor(authUrl) {
-    this._authUrl = authUrl;
+  constructor(apiUrl) {
+    this._apiUrl = apiUrl;
   }
 
   _checkServerResponse(res) {
@@ -12,7 +12,7 @@ class AuthApi {
   }
 
   checkToken(token) {
-    return fetch(`${this._authUrl}users/me`, {
+    return fetch(`${this._apiUrl}users/me`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
@@ -22,7 +22,7 @@ class AuthApi {
   }
 
   userRegister(email, password) {
-    return fetch(`${this._authUrl}signup`, {
+    return fetch(`${this._apiUrl}signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ class AuthApi {
   }
 
   userAuthorize(email, password) {
-    return fetch(`${this._authUrl}signin`, {
+    return fetch(`${this._apiUrl}signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,5 +44,5 @@ class AuthApi {
   }
 }
 
-const authApi = new AuthApi('https://auth.nomoreparties.co/');
+const authApi = new AuthApi('https://api.mestosocial.students.nomoredomainsmonster.ru/');
 export default authApi;
