@@ -41,6 +41,9 @@ class AuthApi {
       body: JSON.stringify({ email, password })
     })
       .then(this._checkServerResponse)
+      .then((userData) => {
+        if (userData.token) { localStorage.setItem('token', userData.token) }
+      })
   }
 }
 
