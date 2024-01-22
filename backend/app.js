@@ -19,7 +19,8 @@ const authGuard = require('./middlewares/auth');
 const NotFound = require('./utils/error-response/NotFound');
 const errorHandler = require('./middlewares/error-handler');
 
-const mongoDB = 'mongodb://localhost:27017/mestodb';
+const mongoDB = 'mongodb://127.0.0.1:27017/mestodb';
+mongoose.set('strictQuery', false);
 mongoose.connect(mongoDB);
 
 app.use(express.json());
