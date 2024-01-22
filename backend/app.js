@@ -10,7 +10,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const corsHandler = require('./middlewares/cors-handler');
 
 const app = express();
-app.use((corsHandler()));
+app.use(corsHandler);
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
