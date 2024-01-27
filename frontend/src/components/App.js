@@ -31,6 +31,15 @@ function App() {
   const [isInfoToolOpen, setInfoToolOpen] = useState(false);
 
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const userToken = localStorage.getItem('token')
+    if (userToken) {
+      authApi.checkToken(userToken)
+        .then((res) => { setEmail(res.data.email); setLoggedIn(true); navigate('/', { replace: true }) })
+        .catch((err) => { console.log(`Возникла ошибка верификации токена, ${err}`) })
+    }
+  }, [navigate, isLoggedIn])
 
   useEffect(() => {
     Promise.all([apiRequest.getUserInfo(), apiRequest.getInitialCards()])
@@ -40,15 +49,6 @@ function App() {
       })
       .catch((err) => console.log(`Возникла ошибка при получении данных с сервера: ${err}`))
   }, [])
-
-  useEffect(() => {
-    const userToken = localStorage.getItem('token')
-    if (userToken) {
-      authApi.checkToken(userToken)
-        .then((res) => { setEmail(res.data.email); setLoggedIn(true); navigate('/', { replace: true }) })
-        .catch((err) => { console.log(`Возникла ошибка верификации токена, ${err}`) })
-    }
-  }, [navigate, isLoggedIn])
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true)
