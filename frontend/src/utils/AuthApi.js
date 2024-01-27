@@ -42,7 +42,7 @@ class AuthApi {
     })
       .then(this._checkServerResponse)
       .then((userData) => {
-        if (userData.token) { localStorage.setItem('token', userData.token) }
+        if (userData.userToken) { localStorage.setItem('token', userData.userToken) }
       })
   }
 }
