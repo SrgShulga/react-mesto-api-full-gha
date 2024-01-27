@@ -31,24 +31,25 @@ function App() {
   const [isInfoToolOpen, setInfoToolOpen] = useState(false);
 
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    const userToken = localStorage.getItem('token')
-    if (userToken) {
-      authApi.checkToken(userToken)
-        .then((res) => { setEmail(res.data.email); setLoggedIn(true); navigate('/', { replace: true }) })
-        .catch((err) => { console.log(`Возникла ошибка верификации токена, ${err}`) })
+
+  useEffect( () => {
+    const userToken = localStorage.getItem('token');
+    if (userToken) { Promise.all([ apiRequest.getUserInfo(), apiRequest.getInitialCards() ])
+      .then(( [ user, initialCards] ) => {
+        setCurrentUser(user);
+        setCards(initialCards);
+      })
+      .catch( (err) => { console.log(`Возникла глобальная ошибка, ${err}`) })
+    }
+  }, [isLoggedIn])
+
+  useEffect( () => {
+    const userToken = localStorage.getItem('token');
+    if (userToken) { authApi.checkToken(userToken)
+        .then( (res) => { setLoggedIn(true); setEmail(res.data.email); navigate('/', { replace: true }) })
+        .catch( (err) => { localStorage.removeItem('token'); console.log(`Возникла ошибка верификации токена, ${err}`) })
     }
   }, [navigate, isLoggedIn])
-
-  useEffect(() => {
-    Promise.all([apiRequest.getUserInfo(), apiRequest.getInitialCards()])
-      .then(([user, initialCards]) => {
-        setCurrentUser(user)
-        setCards(initialCards)
-      })
-      .catch((err) => console.log(`Возникла ошибка при получении данных с сервера: ${err}`))
-  }, [])
 
   function handleEditAvatarClick() {
     setEditAvatarPopupOpen(true)
