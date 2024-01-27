@@ -1,6 +1,6 @@
 class AuthApi {
   constructor(apiUrl) {
-    this._apiUrl = apiUrl;
+    this._authUrl = apiUrl;
   }
 
   _checkServerResponse(res) {
@@ -12,17 +12,17 @@ class AuthApi {
   }
 
   checkToken(token) {
-    return fetch(`${this._apiUrl}users/me`, {
+    return fetch(`${this._authUrl}users/me`, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        authorization: `Bearer ${token}`,
       }
     })
       .then(this._checkServerResponse)
   }
 
   userRegister(email, password) {
-    return fetch(`${this._apiUrl}signup`, {
+    return fetch(`${this._authUrl}signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ class AuthApi {
   }
 
   userAuthorize(email, password) {
-    return fetch(`${this._apiUrl}signin`, {
+    return fetch(`${this._authUrl}signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

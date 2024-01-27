@@ -117,15 +117,11 @@ function App() {
 
   function handleLogin(password, email) {
     authApi.userAuthorize(password, email)
-      .then((res) => {
-        if (res.token) {
-          localStorage.setItem('token', res.token);
-          setEmail(email);
-          setLoggedIn(true);
-          navigate('/', { replace: true });
-        }
+      .then(() => {
+        const userToken = localStorage.getItem('token');
+        if (userToken) { setLoggedIn(true); setEmail(email); navigate('/', { replace: true }) }
       })
-      .catch((err) => { console.log(`При авторизации произошла ошибка ${err}`); setInfoToolOpen(true); setStatus(false) })
+      .catch((err) => { console.log(`Возникла ошибка при авторизации, ${err}`); setInfoToolOpen(true); setStatus(false) })
   }
 
   function handleLogout() {
