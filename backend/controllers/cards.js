@@ -11,15 +11,14 @@ const Forbidden = require('../utils/error-response/Forbidden');
 
 const getCardList = (req, res, next) => {
   Card.find({})
-    .populate(['owner', 'likes'])
-    .then((cardList) => res.send({ data: cardList }))
+    .then((cardList) => res.send(cardList))
     .catch((error) => next(error));
 };
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((cardObject) => res.status(SUCCESS_CREATED).send({ data: cardObject }))
+    .then((cardObject) => res.status(SUCCESS_CREATED).send(cardObject))
     .catch((error) => {
       if (error instanceof ValidationError) {
         next(new BadRequest('Переданы некорректные данные при создании карточки'));
@@ -28,11 +27,11 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndDelete(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((selectedCard) => {
-      if (!selectedCard) { next(new NotFound('Карточка по указанному _id не найдена')); }
-      if (!selectedCard.owner.equals(req.user._id)) { next(new Forbidden('Вы не являетесь автором карточки, удаление невозможно')); }
-      Card.findByIdAndDelete(req.params.cardId)
+      if (!selectedCard) { return next(new NotFound('Карточка по указанному _id не найдена')); }
+      if (!selectedCard.owner.equals(req.user._id)) { return next(new Forbidden('Вы не являетесь автором карточки, удаление невозможно')); }
+      return Card.findByIdAndDelete(req.params.cardId)
         .onFail(() => new NotFound('Карточка по указанному _id не найдена'))
         .then(() => { res.send({ message: 'Карточка успешно удалена с сервера' }); });
     })
@@ -51,7 +50,7 @@ const likeCard = (req, res, next) => {
   )
     .then((selectedCard) => {
       if (selectedCard) {
-        res.send({ data: selectedCard });
+        res.send(selectedCard);
       } else { next(new NotFound('Карточка по указанному _id не найдена')); }
     })
     .catch((error) => {
@@ -69,7 +68,7 @@ const dislikeCard = (req, res, next) => {
   )
     .then((selectedCard) => {
       if (selectedCard) {
-        res.send({ data: selectedCard });
+        res.send(selectedCard);
       } else {
         next(new NotFound('Карточка по указанному _id не найдена'));
       }

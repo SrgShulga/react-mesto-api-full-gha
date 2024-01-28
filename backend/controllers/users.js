@@ -18,15 +18,15 @@ const RequestConflict = require('../utils/error-response/RequestConflict');
 
 const getUserList = (req, res, next) => {
   User.find({})
-    .then((userList) => res.send({ data: userList }))
-    .catch((error) => next(error));
+    .then((userList) => res.send(userList))
+    .catch(next);
 };
 
 const getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .then((selectedUser) => {
       if (selectedUser) {
-        res.send({ data: selectedUser });
+        res.send(selectedUser);
       } else { next(new NotFound('Пользователь по указанному _id не найден')); }
     })
     .catch((error) => {
@@ -41,7 +41,7 @@ const getUserProfile = (req, res, next) => {
     .then((selectedUser) => {
       if (!selectedUser) {
         next(new NotFound('Пользователь по указанному _id не найден'));
-      } else { res.send({ data: selectedUser }); }
+      } else { res.send(selectedUser); }
     })
     .catch((error) => next(error));
 };
@@ -72,7 +72,7 @@ const updateUserData = (req, res, next) => {
     new: true,
     runValidators: true,
   })
-    .then((updatedData) => res.send({ data: updatedData }))
+    .then((updatedData) => res.send(updatedData))
     .catch((error) => {
       if (error instanceof ValidationError) {
         next(new BadRequest('Переданы некорректные данные при обновлении профиля'));
@@ -96,7 +96,7 @@ const updateUserAvatar = (req, res, next) => {
     new: true,
     runValidators: true,
   })
-    .then((updatedAvatar) => res.send({ data: updatedAvatar }))
+    .then((updatedAvatar) => res.send(updatedAvatar))
     .catch((error) => {
       if (error instanceof ValidationError) {
         next(new BadRequest('Переданы некорректные данные при обновлении аватара'));
