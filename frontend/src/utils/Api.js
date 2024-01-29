@@ -58,7 +58,7 @@ export class Api {
   }
 
   deleteCard(cardId) {
-    return fetch(`${this._link}/cards/${cardId}`, {
+    return fetch(`${this._link}cards/${cardId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export class Api {
   }
 
   sendAvatarData(avatarLink) {
-    return fetch(`${this._link}/users/me/avatar`, {
+    return fetch(`${this._link}users/me/avatar`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

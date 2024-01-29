@@ -32,22 +32,24 @@ function App() {
 
   const navigate = useNavigate();
 
-  useEffect( () => {
+  useEffect(() => {
     const userToken = localStorage.getItem('token');
-    if (userToken) { Promise.all([ apiRequest.getUserInfo(), apiRequest.getInitialCards() ])
-      .then(( [ user, initialCards] ) => {
-        setCurrentUser(user);
-        setCards(initialCards);
-      })
-      .catch( (err) => { console.log(`Возникла глобальная ошибка, ${err}`) })
+    if (userToken) {
+      Promise.all([apiRequest.getUserInfo(), apiRequest.getInitialCards()])
+        .then(([user, initialCards]) => {
+          setCurrentUser(user);
+          setCards(initialCards);
+        })
+        .catch((err) => { console.log(`Возникла глобальная ошибка, ${err}`) })
     }
   }, [isLoggedIn])
 
-  useEffect( () => {
+  useEffect(() => {
     const userToken = localStorage.getItem('token');
-    if (userToken) { authApi.checkToken(userToken)
-        .then( (res) => { setLoggedIn(true); setEmail(res.data.email); navigate('/', { replace: true }) })
-        .catch( (err) => { localStorage.removeItem('token'); console.log(`Возникла ошибка верификации токена, ${err}`) })
+    if (userToken) {
+      authApi.checkToken(userToken)
+        .then((res) => { setLoggedIn(true); setEmail(res.email); navigate('/', { replace: true }) })
+        .catch((err) => { localStorage.removeItem('token'); console.log(`Возникла ошибка верификации токена, ${err}`) })
     }
   }, [navigate, isLoggedIn])
 
@@ -70,10 +72,9 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-
+    const isLiked = card.likes.some((like) => like === currentUser._id);
     apiRequest.changeCardLikeStatus(card._id, !isLiked)
-      .then((newCard) => { setCards((state) => state.map((c) => c._id === card._id ? newCard : c)) })
+      .then((cardItem) => { setCards((cardsArr) => cardsArr.map((item) => item._id === card._id ? cardItem : item)) })
       .catch((err) => { console.log(`Произошла ошибка при добавлении/удалении "мне нравится"${err}`) })
   }
 
