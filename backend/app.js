@@ -17,7 +17,7 @@ const { createUser, login } = require('./controllers/users');
 const { validateUserLogin, validateUserRegister } = require('./utils/validation');
 const authGuard = require('./middlewares/auth');
 const NotFound = require('./utils/error-response/NotFound');
-const errorHandler = require('./middlewares/error-handler');
+const errorHandler = require('./middlewares/errorHandler');
 
 const mongoDB = 'mongodb://127.0.0.1:27017/mestodb';
 mongoose.set('strictQuery', false);

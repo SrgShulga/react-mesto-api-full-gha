@@ -32,7 +32,7 @@ const deleteCard = (req, res, next) => {
       if (!selectedCard) { return next(new NotFound('Карточка по указанному _id не найдена')); }
       if (!selectedCard.owner.equals(req.user._id)) { return next(new Forbidden('Вы не являетесь автором карточки, удаление невозможно')); }
       return Card.findByIdAndDelete(req.params.cardId)
-        .onFail(() => new NotFound('Карточка по указанному _id не найдена'))
+        .orFail(() => new NotFound('Карточка по указанному _id не найдена'))
         .then(() => { res.send({ message: 'Карточка успешно удалена с сервера' }); });
     })
     .catch((error) => {
